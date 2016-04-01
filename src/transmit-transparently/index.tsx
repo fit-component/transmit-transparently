@@ -60,7 +60,7 @@ export default function immutableRenderDecorator(Target:any) {
         public render():React.ReactElement<any> {
             const newProps:any = clone(this.props)
             newProps.others = this.state.others
-            return React.createElement(Target, this.props, this.props.children)
+            return React.createElement(Target, newProps, this.props.children)
         }
     }
 
