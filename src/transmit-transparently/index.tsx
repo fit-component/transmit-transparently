@@ -1,35 +1,36 @@
 import * as React from 'react'
+import others from '../others'
 
 const clone = (obj:any):Object=> {
     switch (obj.constructor.name) {
-    case 'Object':
-        let copyObject:any = {}
-        for (let key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                copyObject[key] = clone(obj[key])
+        case 'Object':
+            let copyObject:any = {}
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    copyObject[key] = clone(obj[key])
+                }
             }
-        }
-        return copyObject
+            return copyObject
 
-    case 'Array':
-        let copyArray:any = new Array(obj.length)
-        for (let i = 0, l = obj.length; i < l; i++) {
-            copyArray[i] = clone(obj[i])
-        }
-        return copyArray
+        case 'Array':
+            let copyArray:any = new Array(obj.length)
+            for (let i = 0, l = obj.length; i < l; i++) {
+                copyArray[i] = clone(obj[i])
+            }
+            return copyArray
 
-    case 'RegExp':
-        let flags:string = ''
-        flags += obj.multiline ? 'm' : ''
-        flags += obj.global ? 'g' : ''
-        flags += obj.ignoreCase ? 'i' : ''
-        return new RegExp(obj.source, flags)
+        case 'RegExp':
+            let flags:string = ''
+            flags += obj.multiline ? 'm' : ''
+            flags += obj.global ? 'g' : ''
+            flags += obj.ignoreCase ? 'i' : ''
+            return new RegExp(obj.source, flags)
 
-    case 'Date':
-        return new Date(obj.getTime())
+        case 'Date':
+            return new Date(obj.getTime())
 
-    default: // String, Number, Boolean, …
-        return obj
+        default: // String, Number, Boolean, …
+            return obj
     }
 }
 
@@ -37,9 +38,8 @@ export interface StateInterface {
     others:any
 }
 
-export default function immutableRenderDecorator(Target:any) {
+export default (Target:any)=> {
     class Transmit extends React.Component<any, StateInterface> {
-        static defaultProps:any
         public state:StateInterface = {
             others: {}
         }
@@ -49,12 +49,7 @@ export default function immutableRenderDecorator(Target:any) {
         }
 
         componentWillMount() {
-            let defaultPropsKeys:any = Object.keys(Target.defaultProps)
-            Object.keys(this.props).forEach((key:string)=> {
-                if (!defaultPropsKeys.includes(key)) {
-                    this.state.others[key] = this.props[key]
-                }
-            })
+            this.state.others = others(Target.defaultProps, this.props)
         }
 
         public render():React.ReactElement<any> {
@@ -64,9 +59,9 @@ export default function immutableRenderDecorator(Target:any) {
         }
     }
 
-    const func:any = (Target:any) => {
-        return new Transmit(Target)
+    const func:any = () => {
+        return Transmit
     }
 
-    return func
+    return func()
 }
