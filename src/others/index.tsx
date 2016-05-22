@@ -1,12 +1,14 @@
-export default (defaultProps:any = {}, props:any = {})=> {
-    let defaultPropsKeys:any = Object.keys(defaultProps)
-    let others:any = {}
+import * as _ from 'lodash'
 
-    Object.keys(props).forEach((key:string)=> {
-        if (!defaultPropsKeys.includes(key)) {
+export default (defaultProps: any = {}, props: any = {}, ignore?: string[])=> {
+    let defaultPropsKeys: any = Object.keys(defaultProps)
+    let others: any = {}
+
+    Object.keys(props).forEach((key: string)=> {
+        if (!_.includes(defaultPropsKeys, key) && !_.includes(ignore, key)) {
             others[key] = props[key]
         }
     })
-    
+
     return others
 }
