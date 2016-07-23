@@ -6,14 +6,15 @@ const htmlExtraAttributes = ['defaultChecked', 'defaultValue', 'accept', 'accept
 
 const htmlAttributes = domAttributes.concat(htmlExtraAttributes)
 
-export default (defaultProps: any = {}, props: any = {}, ignore?: string[])=> {
+export default (defaultProps: any = {}, props: any = {}, ignore?: string[], isReactNative?: boolean)=> {
     let defaultPropsKeys: any = Object.keys(defaultProps)
     let others: any = {}
 
     Object.keys(props).forEach((key: string)=> {
         // 不能出现在 defaultProps ignore 里
         // 必须在 htmlAttributes 里
-        if (!_.includes(defaultPropsKeys, key) && !_.includes(ignore, key) && _.includes(htmlAttributes, key)) {
+        // 如果是 reactNative, 则忽略 dom 属性的检测
+        if (!_.includes(defaultPropsKeys, key) && !_.includes(ignore, key) && (isReactNative ? true : _.includes(htmlAttributes, key))) {
             others[key] = props[key]
         }
     })
