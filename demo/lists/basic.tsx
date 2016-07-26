@@ -1,7 +1,7 @@
 import * as React from 'react'
 import TransmitTransparent from '../../src'
 
-@TransmitTransparent
+@TransmitTransparent()
 export default class Demo extends React.Component<any,any> {
     render() {
         return (
