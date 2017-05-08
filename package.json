@@ -1,6 +1,6 @@
 {
   "name": "fit-transmit-transparently",
-  "version": "3.1.60",
+  "version": "3.1.61",
   "description": "time-ago",
   "main": "lib/index.js",
   "typescript": {
